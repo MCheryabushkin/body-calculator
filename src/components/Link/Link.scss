@@ -1,0 +1,28 @@
+.link {
+    border: 2px solid #E0E8F6;
+    border-radius: 30px;
+    padding: 16px;
+    color: #5A5F6D;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 20px;
+    font-family: 'Open Sans Bold';
+
+    &:not(:last-of-type) {
+        margin-right: 16px;
+    }
+
+    &:hover {
+        border-color: #576CED;
+    }
+}
+
+.activeLink {
+    background-color: #E0E8F6;
+    color: #2B50ED;
+
+    &:hover {
+        border-color: #E0E8F6;
+    }
+}
