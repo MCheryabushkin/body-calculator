@@ -17,10 +17,10 @@ export default class Header extends React.Component<{}, {}> {
                 <div className={S.logo}>
                     <h2>YoniFat</h2>
                 </div>
-                <div className={S.nav} key={location.href}>
-                    <Link to="/">Главная</Link>
-                    <Link to="/calculator">Калькулятор</Link>
-                    <Link to="/progress">Мой прогресс</Link>
+                <div className={S.nav} key={pathname}>
+                    <Link to="/" type="home">Главная</Link>
+                    <Link to="/calculator" type="home">Калькулятор</Link>
+                    <Link to="/progress" type="home">Мой прогресс</Link>
                 </div>
             </div>
         )
