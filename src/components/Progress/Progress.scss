@@ -1,5 +1,30 @@
-.canvas {
-    display: block; 
-    height: 150px; 
-    width: 590px
+.chartBlock {
+    display: flex; 
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    
+    @media only screen and (max-width: 1200px) {
+        flex-direction: column;
+    }
+}
+
+.chartContainer {
+    width: calc(50% - 20px);
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0px 2px 8px rgba(16, 16, 122, 0.16);
+    padding: 20px;
+
+    @media only screen and (max-width: 1200px) {
+        width: 100%;
+    }
+}
+
+.chartHeader {
+    font-family: 'Open Sans Bold';
+    font-size: 16px;
+    line-height: 23px;
+    color: #30333D;
+    margin-bottom: 20px;
 }
