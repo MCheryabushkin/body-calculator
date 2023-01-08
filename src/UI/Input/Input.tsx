@@ -8,7 +8,7 @@ interface InputProps {
     value?: any;
     name?: string;
     step?: string;
-    onChange?(value: any): () => void;
+    onChange?: (value: any) => void;
 }
 
 interface InputState {

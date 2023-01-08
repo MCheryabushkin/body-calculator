@@ -49,10 +49,10 @@ export default class Home extends React.Component<{}, IState> {
 
     getDate = () => {
         const date = new Date();
-        const days = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"];
+        const days = ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"];
         const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         // @ts-ignore
-        const dayOfWeek: any = days[moment(date).format('e') - 1];
+        const dayOfWeek: any = days[moment(date).format('e')];
         const month = months[date.getMonth()];
         const dayOfMonth = date.getDate();
         return <span>{dayOfWeek}, <br />{dayOfMonth} {month}</span>;
@@ -62,7 +62,7 @@ export default class Home extends React.Component<{}, IState> {
         const { currentWeight } = this.state;
         return (
             <form action="submit" className={S.form}>
-                <Input type="number" ref={this.weightInputRef} value={currentWeight} />
+                <Input type="number" ref={this.weightInputRef} value={currentWeight} label="Утренний вес" />
                 <Button text="Отправить" disabled={false} onClick={this.onClickWeightBtn} />
             </form>
         )
