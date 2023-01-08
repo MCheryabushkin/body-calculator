@@ -51,6 +51,21 @@ const bodyApi = {
         if (!data.val())
             return 0;
         return data.val();
+    },
+
+    async loginUser(login: string, password: string) {
+        const users = await this.getUsers();
+        const user = users.find((user: any) => user.email === login);
+        if (!user)
+            return 'User not found';
+        
+        if (user.password !== password)
+            return 'Wrong password';
+       return user;
+    },
+
+    async setAuthorize(userId: number, isAuthorize: boolean) {
+        await firebaseApp.database().ref().update({[`/users/${userId}/isAuthorize`]: isAuthorize});
     }
 }
 

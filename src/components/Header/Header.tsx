@@ -1,5 +1,5 @@
 import React from "react";
-// import Calculator from "../Calculator/Calculator";
+import bodyApi from "../../api/bodyApi";
 import Link from "../Link/Link";
 import * as S from "./Header.scss";
 
@@ -9,6 +9,14 @@ export default class Header extends React.Component<{}, {}> {
     checkActive = (url: string) => {
         return location.pathname === url;
     }
+
+    logOut = () => {
+        bodyApi.setAuthorize(0, false)
+            .then(() => localStorage.removeItem("userId"))
+            .then(() => window.history.pushState({}, null, "/login"))
+            .then(() => window.location.reload());
+    }
+
     render () {
         const {pathname} = location;
 
@@ -22,6 +30,7 @@ export default class Header extends React.Component<{}, {}> {
                     <Link to="/calculator" type="home">Калькулятор</Link>
                     <Link to="/progress" type="home">Мой прогресс</Link>
                 </div>
+                <div className={S.logOut}><span onClick={this.logOut}>Выйти</span></div>
             </div>
         )
     }
