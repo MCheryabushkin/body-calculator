@@ -2,6 +2,7 @@ import React from "react";
 import cn from "classnames";
 
 import * as S from './Calculator.scss';
+import getFatPerccentage from "../../utils/fatPercentage";
 
 interface IState {
     bodyParameters: any;
@@ -31,10 +32,7 @@ export default class Calculator extends React.Component<{}, IState> {
 
     bodyCalculate = (e: any) => {
         e.preventDefault();
-        const {gender, neck, waist, height, hip} = this.state.bodyParameters;
-        const fatPercentage: string = gender === 'male'
-            ? (495/(1.0324 - 0.19077*Math.log10(waist-neck) + 0.15456*Math.log10(height))-450).toFixed(2)
-            : (495/(1.29579 - 0.35004*Math.log10(waist+hip-neck) + 0.22100*Math.log10(height))-450).toFixed(2);
+        const fatPercentage: string = getFatPerccentage(this.state.bodyParameters);
         this.setState({ fatPercentage });
     }
 
