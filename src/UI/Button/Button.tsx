@@ -6,6 +6,7 @@ import * as S from "./Button.scss";
 interface InputProps {
     text: string;
     disabled: boolean;
+    type?: "button" | "submit" | "reset";
     onClick?: (value: any) => void;
 }
 
@@ -19,7 +20,7 @@ export default class Button extends React.Component<InputProps, {}> {
         } = this.props;
         return (
             <> 
-                <button className={cn(S.btn, disabled && S.disabled)} disabled={disabled} onClick={onClick}>{text}</button>
+                <button className={cn(S.btn, disabled && S.disabled)} {...this.props}>{text}</button>
             </>
         )
     }

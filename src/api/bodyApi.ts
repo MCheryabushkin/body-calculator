@@ -66,6 +66,18 @@ const bodyApi = {
 
     async setAuthorize(userId: number, isAuthorize: boolean) {
         await firebaseApp.database().ref().update({[`/users/${userId}/isAuthorize`]: isAuthorize});
+    },
+
+    async addNewUser(user: any) {
+        const users = await this.getUsers();
+        const userId = users.length;
+        const newUser = Object.assign(user, {
+            userId,
+            isAuthorize: true,
+        });
+        users.push(newUser);
+        debugger;
+        await firebaseApp.database().ref().update({["/users/"]: users});
     }
 }
 

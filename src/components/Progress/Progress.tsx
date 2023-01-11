@@ -28,7 +28,8 @@ export default class Progress extends React.Component<{}, IState> {
     }
 
     getData = async () => {
-        const user: User = await bodyApi.getUserById(0);
+        const userId = parseInt(localStorage.getItem('userId'));
+        const user: User = await bodyApi.getUserById(userId);
         this.setState({ user, isLoading: true });
     }
     

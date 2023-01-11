@@ -8,7 +8,7 @@ interface InputProps {
     value?: any;
     name?: string;
     step?: string;
-    onChange?: (value: any) => void;
+    onChange?: (value: any, name?: string) => void;
 }
 
 interface InputState {
@@ -26,11 +26,12 @@ export default class Input extends React.Component<InputProps, InputState> {
     }
 
     onChange = (e: any) => {
-        const value = e.target.value;
+        const { value: inputValue, name, type } = e.target;
+        const value = type === 'number' ? parseFloat(inputValue) : inputValue;
         
         this.setState({ value });
         if (this.props.onChange)
-            this.props.onChange(value);
+            this.props.onChange(value, name);
     }
 
     render() {
