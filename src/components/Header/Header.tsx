@@ -29,7 +29,7 @@ export default class Header extends React.Component<{}, IState> {
     logOut = () => {
         bodyApi.setAuthorize(0, false)
             .then(() => localStorage.removeItem("userId"))
-            .then(() => window.history.pushState({}, null, "/login"))
+            .then(() => window.history.pushState({}, null, "/body-calculator/"))
             .then(() => window.location.reload());
     }
 
@@ -51,7 +51,7 @@ export default class Header extends React.Component<{}, IState> {
         const pathname = window.location.pathname;
         return pathname === '/' 
             ? 'YoniFat'
-            : <NavLink to="/" onClick={this.onLinkClick}>YoniFat</NavLink>
+            : <NavLink to="/body-calculator/" onClick={this.onLinkClick}>YoniFat</NavLink>
     }
 
     render () {

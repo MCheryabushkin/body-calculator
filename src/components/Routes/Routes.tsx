@@ -15,12 +15,12 @@ function Routes({isAuthorized}: RouteProps) {
     return (
         <Router>
             {/* @ts-ignore */}
-            <Route exact path='/' element={isAuthorized ? <Home /> : <Login />} />
-            <Route path='/registration' element={isAuthorized ? <Home /> : <Registration />} />
-            <Route path='/login' element={isAuthorized ? <Home /> : <Login />} />
-            <Route path='/calculator' element={isAuthorized ? <Calculator /> : <Login />} />
-            <Route path='/progress' element={isAuthorized ? <Progress /> : <Login />} />
-            <Route path='/help' element={isAuthorized ? <Help /> : <Login />} />
+            <Route exact path='/body-calculator/' element={isAuthorized ? <Home /> : <Login />} />
+            <Route path='/body-calculator/registration' element={isAuthorized ? <Home /> : <Registration />} />
+            <Route path='/body-calculator/login' element={isAuthorized ? <Home /> : <Login />} />
+            <Route path='/body-calculator/calculator' element={isAuthorized ? <Calculator /> : <Login />} />
+            <Route path='/body-calculator/progress' element={isAuthorized ? <Progress /> : <Login />} />
+            <Route path='/body-calculator//help' element={isAuthorized ? <Help /> : <Login />} />
         </Router>
     )
 }

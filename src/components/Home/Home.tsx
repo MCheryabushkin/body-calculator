@@ -48,8 +48,8 @@ export default class Home extends React.Component<{}, IState> {
     }
 
     async componentDidMount() {
-        if (window.location.pathname !== '/')
-            window.history.pushState({}, null, "/");
+        if (window.location.pathname !== '/body-calculator/')
+            window.history.pushState({}, null, "/body-calculator");
         await this.init();
     }
     init = async () => {

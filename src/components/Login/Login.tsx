@@ -26,7 +26,7 @@ class Login extends React.Component<{}, LoginState> {
     }
 
     componentDidMount(): void {
-        window.history.pushState({}, null, "/login");
+        window.history.pushState({}, null, "/body-calculator/login");
     }
 
     onInputChange = (value: any) => {
@@ -44,7 +44,7 @@ class Login extends React.Component<{}, LoginState> {
         if (typeof user !== 'string')
             bodyApi.setAuthorize(user.id, true)
                 .then(() => localStorage.setItem("userId", user.id))
-                .then(() => window.history.pushState({}, null, "/"))
+                .then(() => window.history.pushState({}, null, "/body-calculator/"))
                 .then(() => window.location.reload());
     }
 
@@ -57,7 +57,7 @@ class Login extends React.Component<{}, LoginState> {
                 <Input ref={this.passwordInputRef} name="password" type="password" label="Пароль" onChange={this.onInputChange} />
                 <Button type="submit" text="Войти" disabled={false} />
     
-                <div className={S.registration}>Или <Link to="/registration">зарегистрироваться</Link></div>
+                <div className={S.registration}>Или <Link to="/body-calculator/registration">зарегистрироваться</Link></div>
             </form>
         )
     }
