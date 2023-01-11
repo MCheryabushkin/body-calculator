@@ -18,7 +18,7 @@ export default class Header extends React.Component<{}, {}> {
     logOut = () => {
         bodyApi.setAuthorize(0, false)
             .then(() => localStorage.removeItem("userId"))
-            .then(() => window.history.pushState({}, null, "/login"))
+            .then(() => window.history.pushState({}, null, "/body-calculator/"))
             .then(() => window.location.reload());
     }
 
@@ -31,9 +31,9 @@ export default class Header extends React.Component<{}, {}> {
                     <h2>YoniFat</h2>
                 </div>
                 <div className={S.nav} key={pathname}>
-                    <Link to="/" type="home">Главная</Link>
-                    <Link to="/calculator" type="home">Калькулятор</Link>
-                    <Link to="/progress" type="home">Мой прогресс</Link>
+                    <Link to="/body-calculator/" type="home">Главная</Link>
+                    <Link to="/body-calculator/calculator" type="home">Калькулятор</Link>
+                    <Link to="/body-calculator/progress" type="home">Мой прогресс</Link>
                 </div>
                 <div className={S.logOut}><span onClick={this.logOut}>Выйти</span></div>
             </div>
