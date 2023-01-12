@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter } from 'react-router-dom';
 import bodyApi from "../../api/bodyApi";
+import { getUserId } from "../../utils/util.helper";
 import Header from '../Header/Header';
 import Routes from '../Routes/Routes';
 
@@ -30,7 +31,7 @@ export default class Layout extends React.Component<{}, IState> {
     }
 
     getUser = () => {
-        const userId = parseInt(localStorage.getItem('userId'));
+        const userId = getUserId();
         if (userId) {
             this.setState({ userId });
         }

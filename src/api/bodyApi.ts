@@ -1,4 +1,5 @@
 import {firebaseApp} from "../firebase";
+import { getTodayDate } from "../utils/util.helper";
 
 const bodyApi = {
     async getUsers() {
@@ -18,6 +19,16 @@ const bodyApi = {
 
     async updateUser(user: any) {
         await firebaseApp.database().ref().update(user);
+    },
+
+    async createUserWeightHistory(userId: number, userWeight: number) {
+        const bodyParameters = await this.getBodyParameters();
+        const today = getTodayDate();
+        bodyParameters.push({
+            userId,
+            weightHistory: {[today]: {weight: userWeight}}
+        });
+        await firebaseApp.database().ref().update({[`/bodyParameters/`]: bodyParameters});
     },
 
     async updateUserWeightHistory(user: any, userId: number) {
@@ -76,9 +87,17 @@ const bodyApi = {
             isAuthorize: true,
         });
         users.push(newUser);
-        debugger;
-        await firebaseApp.database().ref().update({["/users/"]: users});
-    }
+        await firebaseApp.database().ref().update({["/users/"]: users})
+            .then(() => this.createUserWeightHistory(newUser.id, newUser.weight));
+    },
+
+    async getBodyParameters() {
+        const data = await firebaseApp
+            .database()
+            .ref('bodyParameters/')
+            .once('value', (snap) => snap.val());
+        return data.val();
+    },
 }
 
 export default bodyApi;

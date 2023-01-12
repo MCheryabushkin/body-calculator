@@ -7,6 +7,7 @@ import Modal from "../Modal/Modal";
 import Input from "../../UI/Input/Input";
 import Button from "../../UI/Button/Button";
 import bodyApi from "../../api/bodyApi";
+import { getTodayDate, getUserId } from "../../utils/util.helper";
 
 interface IState {
     isHovered: boolean;
@@ -40,7 +41,8 @@ export default class Home extends React.Component<{}, IState> {
     }
 
     setCurrentUser = async () => {
-        const currentUser = await bodyApi.getUserWeightHistory(0);
+        const userId = getUserId();
+        const currentUser = await bodyApi.getUserWeightHistory(userId);
         this.setState({ currentUser });
     }
 
@@ -77,11 +79,10 @@ export default class Home extends React.Component<{}, IState> {
 
         const user: any = {};
         const currentWeight = parseFloat(this.weightInputRef.current.state.value);
-        const date = new Date();
         const { currentUser } = this.state;
-        const userId = parseInt(localStorage.getItem('userId'));
+        const userId = getUserId();
 
-        currentUser[moment(date).format("DD-MM-YYYY").split("T")[0]] = {weight: currentWeight};
+        currentUser[getTodayDate()] = {weight: currentWeight};
         this.setState({ isWeightModal: false, currentUser });
         bodyApi.updateUserWeightHistory(currentUser, userId);
         this.getCurrentWeight();
@@ -96,9 +97,9 @@ export default class Home extends React.Component<{}, IState> {
     }
 
     getCurrentWeight = async () => {
-        const date = new Date();
-        const today = moment(date).format("DD-MM-YYYY").split("T")[0];
-        const currentWeight = await bodyApi.getUserWeight(today, 0);
+        const today = getTodayDate();
+        const userId = getUserId()
+        const currentWeight = await bodyApi.getUserWeight(today, userId);
         this.setState({ currentWeight });
     }
 

@@ -6,6 +6,7 @@ import bodyApi from "../../api/bodyApi";
 import { User } from "../../interfaces";
 
 import * as S from "./Progress.scss";
+import { getUserId } from "../../utils/util.helper";
 
 
 interface IState {
@@ -28,7 +29,7 @@ export default class Progress extends React.Component<{}, IState> {
     }
 
     getData = async () => {
-        const userId = parseInt(localStorage.getItem('userId'));
+        const userId = getUserId();
         const user: User = await bodyApi.getUserById(userId);
         this.setState({ user, isLoading: true });
     }

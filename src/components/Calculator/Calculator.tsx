@@ -2,7 +2,7 @@ import React from "react";
 import cn from "classnames";
 
 import * as S from './Calculator.scss';
-import getFatPerccentage from "../../utils/fatPercentage";
+import {getFatPercentage} from "../../utils/util.helper";
 
 interface IState {
     bodyParameters: any;
@@ -32,7 +32,7 @@ export default class Calculator extends React.Component<{}, IState> {
 
     bodyCalculate = (e: any) => {
         e.preventDefault();
-        const fatPercentage: string = getFatPerccentage(this.state.bodyParameters);
+        const fatPercentage: string = getFatPercentage(this.state.bodyParameters);
         this.setState({ fatPercentage });
     }
 
