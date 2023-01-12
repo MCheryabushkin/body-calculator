@@ -76,9 +76,9 @@ export default class Header extends React.Component<{}, IState> {
                 {isSidebar && <div className={S.sidebar} onClick={this.onCloseSidebar}>
                     <div className={S.sidebarBody}>
                         <ul className={S.sidebarNav}>
-                            <li className={S.listItem}><NavLink className={S.link} to="/" onClick={this.onLinkClick}>Главная</NavLink></li>
-                            <li className={S.listItem}><NavLink className={S.link} to="/progress" onClick={this.onLinkClick}>Мой прогресс</NavLink></li>
-                            <li className={S.listItem}><NavLink className={S.link} to="/help" onClick={this.onLinkClick}>Помощь</NavLink></li>
+                            <li className={S.listItem}><NavLink className={S.link} to="/body-calculator/" onClick={this.onLinkClick}>Главная</NavLink></li>
+                            <li className={S.listItem}><NavLink className={S.link} to="/body-calculator/progress" onClick={this.onLinkClick}>Мой прогресс</NavLink></li>
+                            <li className={S.listItem}><NavLink className={S.link} to="/body-calculator/help" onClick={this.onLinkClick}>Помощь</NavLink></li>
                             <li className={S.listItem}><div><span onClick={this.logOut}>Выйти</span></div></li>
                         </ul>
                     </div>

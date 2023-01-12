@@ -56,7 +56,7 @@ class Registration extends React.Component<{}, RegState> {
         const {user} = this.state;
         const newUser = this.createNewUser(user);
         bodyApi.addNewUser(newUser)
-            .then(() => window.history.pushState({}, null, "/"))
+            .then(() => window.history.pushState({}, null, "/body-calculator/"))
             .then(() => window.location.reload());
     }
 
