@@ -79,10 +79,11 @@ export default class Home extends React.Component<{}, IState> {
         const currentWeight = parseFloat(this.weightInputRef.current.state.value);
         const date = new Date();
         const { currentUser } = this.state;
+        const userId = parseInt(localStorage.getItem('userId'));
 
         currentUser[moment(date).format("DD-MM-YYYY").split("T")[0]] = {weight: currentWeight};
         this.setState({ isWeightModal: false, currentUser });
-        bodyApi.updateUserWeightHistory(currentUser);
+        bodyApi.updateUserWeightHistory(currentUser, userId);
         this.getCurrentWeight();
     }
 
