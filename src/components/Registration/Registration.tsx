@@ -2,7 +2,7 @@ import React from "react";
 import bodyApi from "../../api/bodyApi";
 import Button from "../../UI/Button/Button";
 import Input from "../../UI/Input/Input";
-import getFatPerccentage from "../../utils/fatPercentage";
+import {getFatPercentage} from "../../utils/util.helper";
 
 
 interface RegState {
@@ -52,11 +52,13 @@ class Registration extends React.Component<{}, RegState> {
         e.preventDefault();
         const {user} = this.state;
         const newUser = this.createNewUser(user);
-        bodyApi.addNewUser(newUser);
+        bodyApi.addNewUser(newUser)
+            .then(() => window.history.pushState({}, null, "/"))
+            .then(() => window.location.reload());
     }
 
     createNewUser = (user: any) => {
-        const fat = getFatPerccentage(user);
+        const fat = getFatPercentage(user);
         const bodyParameters = {
             fat: [fat],
             labels: ["анкета"],
