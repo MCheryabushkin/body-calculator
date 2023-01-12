@@ -20,8 +20,8 @@ const bodyApi = {
         await firebaseApp.database().ref().update(user);
     },
 
-    async updateUserWeightHistory(user: any) {
-        await firebaseApp.database().ref().update({['/bodyParameters/0/weightHistory/']: user});
+    async updateUserWeightHistory(user: any, userId: number) {
+        await firebaseApp.database().ref().update({[`/bodyParameters/${userId}/weightHistory/`]: user});
     },
 
     async isAuthorizedUser(userId: number) {
@@ -70,9 +70,9 @@ const bodyApi = {
 
     async addNewUser(user: any) {
         const users = await this.getUsers();
-        const userId = users.length;
+        const id = users.length;
         const newUser = Object.assign(user, {
-            userId,
+            id,
             isAuthorize: true,
         });
         users.push(newUser);
