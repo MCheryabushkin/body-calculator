@@ -7,7 +7,7 @@ import {getFatPercentage} from "../../utils/util.helper";
 interface IState {
     bodyParameters: any;
     isDisabled: boolean;
-    fatPercentage: string | null;
+    fatPercentage: string | number | null;
 }
 
 export default class Calculator extends React.Component<{}, IState> {
@@ -32,7 +32,7 @@ export default class Calculator extends React.Component<{}, IState> {
 
     bodyCalculate = (e: any) => {
         e.preventDefault();
-        const fatPercentage: string = getFatPercentage(this.state.bodyParameters);
+        const fatPercentage: number | string = getFatPercentage(this.state.bodyParameters);
         this.setState({ fatPercentage });
     }
 

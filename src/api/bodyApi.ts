@@ -98,6 +98,30 @@ const bodyApi = {
             .once('value', (snap) => snap.val());
         return data.val();
     },
+
+    async getBodyParametersByUserId(userId: number) {
+        const data = await firebaseApp
+            .database()
+            .ref(`users/${userId}/bodyParameters`)
+            .once('value', (snap) => snap.val());
+        return data.val();
+    },
+
+    async getWeightHistory(userId: number) {
+        const bodyParameters = await this.getBodyParameters();
+        return bodyParameters[userId].weightHistory;
+    },
+
+    async sendWeeklyReport({ fat: newFat, label: newLabel, weight: newWeight, userId}: { fat: number, label: string, weight: string | number, userId: number}) {
+        const {fat, labels, weight} = await this.getBodyParametersByUserId(userId);
+        fat.push(newFat);
+        labels.push(newLabel);
+        weight.push(newWeight);
+
+        // await firebaseApp.database().ref().update({[`/users/${userId}/bodyParameters/fat`]: fat});
+        // await firebaseApp.database().ref().update({[`/users/${userId}/bodyParameters/labels`]: labels});
+        // await firebaseApp.database().ref().update({[`/users/${userId}/bodyParameters/weight`]: weight});
+    }
 }
 
 export default bodyApi;

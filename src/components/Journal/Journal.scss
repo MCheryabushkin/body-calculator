@@ -1,0 +1,33 @@
+.journalContainer {
+    padding-top: 40px;
+    padding-bottom: 40px;
+}
+
+.item {
+    padding: 20px;
+    margin-bottom: 10px;
+    border: 2px solid #E0E8F6;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+
+   &> div {
+        margin-right: 82px;
+    }
+}
+
+.date {
+    font-family: 'Open Sans Bold';
+    font-size: 16px;
+    line-height: 23px;
+}
+
+.weight {
+    font-size: 16px;
+    line-height: 23px;
+
+    &> span {
+        margin-left: 4px;
+        color: #5A5F6D;
+    }
+}

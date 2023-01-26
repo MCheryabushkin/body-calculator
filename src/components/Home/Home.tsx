@@ -7,27 +7,37 @@ import Modal from "../Modal/Modal";
 import Input from "../../UI/Input/Input";
 import Button from "../../UI/Button/Button";
 import bodyApi from "../../api/bodyApi";
-import { getTodayDate, getUserId } from "../../utils/util.helper";
+import { getDate, getFatPercentage, getTodayDate, getUserId } from "../../utils/util.helper";
+import Journal from "../Journal/Journal";
+import Card from "../Card/Card";
 
 interface IState {
-    isHovered: boolean;
     isWeightModal: boolean;
     currentWeight: number | string;
+    currentUserWeightHistory: any;
+    modalType: string | null;
     currentUser: any;
+    weightError: boolean;
+    weightHistory: any;
 }
 
 
 export default class Home extends React.Component<{}, IState> {
     weightInputRef: any;
+    userId: number = getUserId();
+    today: string = getTodayDate();
 
     constructor(props: any) {
         super(props);
 
         this.state = {
-            isHovered: false,
             isWeightModal: false,
             currentWeight: 0,
+            currentUserWeightHistory: {},
+            modalType: null,
             currentUser: {},
+            weightError: false,
+            weightHistory: null,
         }
 
         this.weightInputRef = React.createRef();
@@ -36,31 +46,47 @@ export default class Home extends React.Component<{}, IState> {
     async componentDidMount() {
         if (window.location.pathname !== '/')
             window.history.pushState({}, null, "/");
+        await this.init();
+    }
+    init = async () => {
         await this.getCurrentWeight();
-        await this.setCurrentUser();
+        await this.setCurrentUserWeight();
+        await this.getCurrentUser();
+        await this.getWeightHistory();
     }
 
-    setCurrentUser = async () => {
-        const userId = getUserId();
-        const currentUser = await bodyApi.getUserWeightHistory(userId);
+    setCurrentUserWeight = async () => {
+        const currentUserWeightHistory = await bodyApi.getUserWeightHistory(this.userId);
+        this.setState({ currentUserWeightHistory });
+    }
+
+    getCurrentUser = async () => {
+        const currentUser = await bodyApi.getUserById(this.userId);
         this.setState({ currentUser });
     }
 
-    onCardHover = () => { this.setState({ isHovered: true }) }
-    onCardLeave = () => { this.setState({ isHovered: false }) }
+    getWeightHistory = async () => {
+        const weightHistory = await bodyApi.getWeightHistory(this.userId);
+        this.setState({ weightHistory });
+    }
 
     getDate = () => {
-        const date = new Date();
-        const days = ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"];
-        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        // @ts-ignore
-        const dayOfWeek: any = days[moment(date).format('e')];
-        const month = months[date.getMonth()];
-        const dayOfMonth = date.getDate();
+        const { dayOfWeek, dayOfMonth, month } = getDate(true);
         return <span>{dayOfWeek}, <br />{dayOfMonth} {month}</span>;
     }
 
     renderModalContent = () => {
+        const { modalType } = this.state;
+        
+        switch(modalType) {
+            case "weight":
+                return this.renderWeightForm();
+            case "report":
+                return this.renderReportForm();
+        }
+    }
+
+    renderWeightForm = () => {
         const { currentWeight } = this.state;
         return (
             <form action="submit" className={S.form}>
@@ -70,6 +96,51 @@ export default class Home extends React.Component<{}, IState> {
         )
     }
 
+    renderReportForm = () => {
+        const { currentUser: { gender } } = this.state;
+        return (
+            <form action="submit" className={S.form} onSubmit={this.sendWeeklyReport}>
+                <Input type="number" name="neck" label="Обхват шеи" />
+                <Input type="number" name="waist" label="Обхват талии" />
+                {gender === "female" && <Input type="number" name="hip" label="Обхват бёдер" />}
+                <Button type="submit" text="Отправить" disabled={false} />
+            </form>
+        )
+    }
+
+    renderModalWeightError = () => {
+        return <div>Заполните сегодняшний вес</div>
+    }
+
+    sendWeeklyReport = (e: any) => {
+        e.preventDefault();
+        const { currentUser: { gender, height}, currentWeight } = this.state;
+        const { neck, waist, hip } = e.target;
+        const fat = getFatPercentage({neck: neck.value, waist: waist.value, hip: hip?.value, gender, height});
+        const label = `отчет ${this.today}`;
+        // const weight = currentWeight;
+        const weight = this.calculateMiddleWeight();
+        debugger;
+        bodyApi.sendWeeklyReport({fat, label, weight, userId: this.userId})
+            .then(() => this.setState({ isWeightModal: false }))
+    }
+
+    calculateMiddleWeight = (): number => {
+        const {weightHistory} = this.state;
+        // const lastWeigh = weightHistory[this.today];
+        const [day, month, year] = this.today.split("-");
+        let summ = 0;
+        let count = 0;
+        for (let i = parseInt(day); i >= (parseInt(day) - 6); i--) {
+            const date = weightHistory[`${i}-${month}-${year}`];
+            if (date) {
+                summ += date.weight;
+                count++;
+            }
+        }
+        return (summ / count);
+    }
+
     onWeightChange = (value: any): any => {
         if (!parseFloat(value)) return;
         this.setState({ currentWeight: parseFloat(value) });
@@ -77,56 +148,82 @@ export default class Home extends React.Component<{}, IState> {
     onClickWeightBtn = (value: any): any => {
         value.preventDefault();
 
-        const user: any = {};
         const currentWeight = parseFloat(this.weightInputRef.current.state.value);
-        const { currentUser } = this.state;
-        const userId = getUserId();
+        const { currentUserWeightHistory } = this.state;
 
-        currentUser[getTodayDate()] = {weight: currentWeight};
-        this.setState({ isWeightModal: false, currentUser });
-        bodyApi.updateUserWeightHistory(currentUser, userId);
+        currentUserWeightHistory[this.today] = {weight: currentWeight};
+        this.setState({ isWeightModal: false, currentUserWeightHistory });
+        bodyApi.updateUserWeightHistory(currentUserWeightHistory, this.userId);
         this.getCurrentWeight();
     }
 
-    changeWeight = () => {
-        this.setState({ isWeightModal: true })
+    onCardClick = (modalType: any) => {
+        if (modalType === 'report' && !this.state.currentWeight) {
+            this.renderWeightError();
+            return;
+        }
+        this.setState({ 
+            isWeightModal: true,
+            modalType,
+        })
+    }
+
+    canSetReport = async () => {
+        const {labels} = await bodyApi.getBodyParametersByUserId(this.userId);
+    }
+
+    renderWeightError = () => {
+        this.setState({ weightError: true })
     }
 
     onModalClose = () => {
-        this.setState({ isWeightModal: false })
+        this.setState({ 
+            isWeightModal: false,
+            weightError: false,
+        })
     }
 
     getCurrentWeight = async () => {
-        const today = getTodayDate();
-        const userId = getUserId()
-        const currentWeight = await bodyApi.getUserWeight(today, userId);
+        const currentWeight = await bodyApi.getUserWeight(this.today, this.userId);
         this.setState({ currentWeight });
     }
 
+    renderCurrentWeight = (currentWeight: any) => {
+        return <><span>{currentWeight}</span> кг</> 
+    }
+
     render() {
-        const {isHovered, isWeightModal, currentWeight } = this.state;
+        const { isWeightModal, currentWeight, weightError } = this.state;
 
         return (
-            <div className={S.homeContainer}>
-                <div className={S.dateContainer}>
-                    <div className={S.date}>
-                        <div>{this.getDate()}</div>
-                    </div>
-                </div>
-                <div className={S.paramsContainer}>
-                    <div className={S.card}
-                        onMouseOver={this.onCardHover}
-                        onMouseLeave={this.onCardLeave}>
-                        <div className={S.textContainer}>
-                            <div className={cn(S.icon, isHovered && S.iconHovered)}><i></i></div>
-                            <div className={S.title}>Утренний вес</div>
-                            <div className={S.weight}><span>{currentWeight}</span> кг</div>
+            <div key={currentWeight}>
+                <div className={S.homeContainer}>
+                    <div className={S.dateContainer}>
+                        <div className={S.date}>
+                            <div>{this.getDate()}</div>
                         </div>
-                        <div className={S.btn} onClick={this.changeWeight}>Изменить</div>
                     </div>
+                    <Card
+                        cardType="weight"
+                        title="Утренний вес"
+                        value={this.renderCurrentWeight(currentWeight)}
+                        btnTitle="Изменить"
+                        icon="weight"
+                        onClickCardBtn={this.onCardClick}
+                    />
+                    <Card
+                        cardType="report"
+                        title="Еженедельный отчёт"
+                        btnTitle="Сдать"
+                        icon="ruler"
+                        onClickCardBtn={this.onCardClick}
+                    />
+
+                    {isWeightModal && <Modal content={this.renderModalContent()} onClose={this.onModalClose} />}
+                    {weightError && <Modal content={this.renderModalWeightError()} onClose={this.onModalClose} />}
                 </div>
 
-                {isWeightModal && <Modal content={this.renderModalContent()} onClose={this.onModalClose} />}
+                <Journal />
             </div>
         )
     }
