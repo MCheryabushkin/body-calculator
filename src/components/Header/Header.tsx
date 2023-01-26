@@ -5,6 +5,11 @@ import * as S from "./Header.scss";
 
 
 export default class Header extends React.Component<{}, {}> {
+    user: any;
+
+    componentDidMount() {
+        
+    }
 
     checkActive = (url: string) => {
         return location.pathname === url;

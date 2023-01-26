@@ -8,6 +8,7 @@ interface InputProps {
     value?: any;
     name?: string;
     step?: string;
+    required?: boolean;
     onChange?: (value: any, name?: string) => void;
 }
 
@@ -35,7 +36,7 @@ export default class Input extends React.Component<InputProps, InputState> {
     }
 
     render() {
-        const { name, label } = this.props;
+        const { name, label, required } = this.props;
         const { value } = this.state;
         return (
             <div className={S.inputContainer}> 
@@ -44,8 +45,10 @@ export default class Input extends React.Component<InputProps, InputState> {
                     placeholder={label} 
                     value={value ? value : ''}
                     onChange={this.onChange} 
+                    id={name}
                 />
                 <label htmlFor={name} className={S.placeholder}>{label}</label>
+                {required && <span className={S.requireStar}>*</span>}
             </div>
         )
     }
