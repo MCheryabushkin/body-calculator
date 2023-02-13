@@ -31,20 +31,31 @@ export default class Journal extends React.Component<{}, JournalState> {
         this.setState({ weightHistory, isLoading: true });
     }
 
+    sortJournal = (a: string, b: string): number => {
+        const [aDay, aMonth, aYear] = a.split('-');
+        const [bDay, bMonth, bYear] = b.split('-');
+
+        return new Date(`${aMonth}-${aDay}-${aYear}`) < new Date(`${bMonth}-${bDay}-${bYear}`) ? -1 : 1;
+    }
+
     renderJournal = () => {
         const {weightHistory} = this.state;
 
-        return Object.keys(weightHistory).reverse().map(date => {
-            const { dayOfMonth, month } = getDate(false, moment(date, "DD-MM-YYYY").format());
-            const {weight} = weightHistory[date];
-            
-            return(
-                <div key={date} className={S.item}>
-                    <div className={S.date}>{dayOfMonth} {month}</div>
-                    <div className={S.weight}>{weight}<span>кг</span></div>
-                </div>
-            )
-        });
+        return Object.keys(weightHistory)
+            .sort((a, b) => this.sortJournal(a, b))
+            .reverse()
+            .map(date => {
+                const { dayOfMonth, month } = getDate(false, moment(date, "DD-MM-YYYY").format());
+                const {weight, steps} = weightHistory[date];
+                
+                return(
+                    <div key={date} className={S.item}>
+                        <div className={S.date}>{dayOfMonth} {month}</div>
+                        <div className={S.weight}>{weight ? weight : "-"}<span>кг</span></div>
+                        <div className={S.weight}>{steps ? steps : "-"}<span>шагов</span></div>
+                    </div>
+                )
+            });
     }
 
     render() {

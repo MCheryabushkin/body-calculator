@@ -4,7 +4,12 @@ const getFatPercentage = ({gender, neck, waist, height, hip}: any) => gender ===
     ? parseFloat((495/(1.0324 - 0.19077*Math.log10(parseFloat(waist)-parseFloat(neck)) + 0.15456*Math.log10(parseFloat(height)))-450).toFixed(2))
     : parseFloat((495/(1.29579 - 0.35004*Math.log10(parseFloat(waist)+parseFloat(hip)-parseFloat(neck)) + 0.22100*Math.log10(parseFloat(height)))-450).toFixed(2));
 
-const getUserId = () => parseInt(localStorage.getItem("userId"));
+const getUserId = () => {
+    const userId = localStorage.getItem("userId");
+    if (typeof userId === 'string') 
+        return parseInt(localStorage.getItem("userId"));
+    return null;
+};
 
 const getTodayDate = () => {
     const date = new Date();

@@ -14,6 +14,7 @@ import Card from "../Card/Card";
 interface IState {
     isWeightModal: boolean;
     currentWeight: number | string;
+    currentSteps: number | string;
     currentUserWeightHistory: any;
     modalType: string | null;
     currentUser: any;
@@ -38,6 +39,7 @@ export default class Home extends React.Component<{}, IState> {
             currentUser: {},
             weightError: false,
             weightHistory: null,
+            currentSteps: 0,
         }
 
         this.weightInputRef = React.createRef();
@@ -83,6 +85,8 @@ export default class Home extends React.Component<{}, IState> {
                 return this.renderWeightForm();
             case "report":
                 return this.renderReportForm();
+            case "steps":
+                return this.renderStepsForm();
         }
     }
 
@@ -104,6 +108,15 @@ export default class Home extends React.Component<{}, IState> {
                 <Input type="number" name="waist" label="Обхват талии" />
                 {gender === "female" && <Input type="number" name="hip" label="Обхват бёдер" />}
                 <Button type="submit" text="Отправить" disabled={false} />
+            </form>
+        )
+    }
+
+    renderStepsForm = () => {
+        return (
+            <form action="submit" onSubmit={this.onClickStepsBtn} className={S.form}>
+                <Input type="number" name="steps" label="Шаги за день" />
+                <Button text="Отправить" disabled={false} />
             </form>
         )
     }
@@ -151,9 +164,24 @@ export default class Home extends React.Component<{}, IState> {
         const currentWeight = parseFloat(this.weightInputRef.current.state.value);
         const { currentUserWeightHistory } = this.state;
 
-        currentUserWeightHistory[this.today] = {weight: currentWeight};
+        if (!currentUserWeightHistory[this.today])
+            currentUserWeightHistory[this.today] = {weight: 0};
+        currentUserWeightHistory[this.today].weight = currentWeight;
         this.setState({ isWeightModal: false, currentUserWeightHistory });
-        bodyApi.updateUserWeightHistory(currentUserWeightHistory, this.userId);
+        bodyApi.updateBodyParameters(currentUserWeightHistory, this.userId);
+        this.getCurrentWeight();
+    }
+
+    onClickStepsBtn = (value: any): any => {
+        value.preventDefault();
+        const currentSteps = parseFloat(value.target.steps.value);
+        const { currentUserWeightHistory } = this.state;
+
+        if (!currentUserWeightHistory[this.today])
+            currentUserWeightHistory[this.today] = { steps: 0 };
+        currentUserWeightHistory[this.today].steps = currentSteps;
+        this.setState({ isWeightModal: false, currentUserWeightHistory });
+        bodyApi.updateBodyParameters(currentUserWeightHistory, this.userId);
         this.getCurrentWeight();
     }
 
@@ -184,19 +212,19 @@ export default class Home extends React.Component<{}, IState> {
     }
 
     getCurrentWeight = async () => {
-        const currentWeight = await bodyApi.getUserWeight(this.today, this.userId);
-        this.setState({ currentWeight });
+        const { weight: currentWeight, steps: currentSteps} = await bodyApi.getUserParams(this.today, this.userId);
+        this.setState({ currentWeight, currentSteps });
     }
 
-    renderCurrentWeight = (currentWeight: any) => {
-        return <><span>{currentWeight}</span> кг</> 
+    renderCurrentParam = (currentParam: any, union?: string) => {
+        return <><span>{currentParam ? currentParam : '-'}</span> {union}</>
     }
 
     render() {
-        const { isWeightModal, currentWeight, weightError } = this.state;
+        const { isWeightModal, currentWeight, weightError, currentSteps } = this.state;
 
         return (
-            <div key={currentWeight}>
+            <div key={`${currentWeight}-${currentSteps}`}>
                 <div className={S.homeContainer}>
                     <div className={S.dateContainer}>
                         <div className={S.date}>
@@ -206,10 +234,19 @@ export default class Home extends React.Component<{}, IState> {
                     <Card
                         cardType="weight"
                         title="Утренний вес"
-                        value={this.renderCurrentWeight(currentWeight)}
+                        value={this.renderCurrentParam(currentWeight, 'кг')}
                         btnTitle="Изменить"
                         icon="weight"
                         onClickCardBtn={this.onCardClick}
+                    />
+                    <Card
+                        cardType="steps"
+                        title="Шаги за день"
+                        value={this.renderCurrentParam(currentSteps)}
+                        btnTitle="Изменить"
+                        icon="steps"
+                        onClickCardBtn={this.onCardClick}
+                        // disabled
                     />
                     <Card
                         cardType="report"
@@ -217,6 +254,7 @@ export default class Home extends React.Component<{}, IState> {
                         btnTitle="Сдать"
                         icon="ruler"
                         onClickCardBtn={this.onCardClick}
+                        disabled
                     />
 
                     {isWeightModal && <Modal content={this.renderModalContent()} onClose={this.onModalClose} />}

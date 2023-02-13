@@ -31,7 +31,7 @@ const bodyApi = {
         await firebaseApp.database().ref().update({[`/bodyParameters/`]: bodyParameters});
     },
 
-    async updateUserWeightHistory(user: any, userId: number) {
+    async updateBodyParameters(user: any, userId: number) {
         await firebaseApp.database().ref().update({[`/bodyParameters/${userId}/weightHistory/`]: user});
     },
 
@@ -44,14 +44,14 @@ const bodyApi = {
         return data.val();
     },
 
-    async getUserWeight(date: string, userId: number) {
+    async getUserParams(date: string, userId: number) {
         const data = await firebaseApp
             .database()
             .ref(`bodyParameters/${userId}/weightHistory/${date}`)
             .once('value', (snap) => snap.val());
         if (!data.val())
             return 0;
-        return data.val().weight;
+        return data.val();
     },
 
     async getUserWeightHistory(userId: number) {
