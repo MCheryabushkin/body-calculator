@@ -16,12 +16,11 @@ export default class Layout extends React.Component<{}, IState> {
 
         this.state = {
             isAuthorized: null,
-            userId: 0,
+            userId: null,
         }
     }
 
     componentDidMount(): void {
-        this.getUser();
         this.getAuthorize();
     }
 
@@ -30,16 +29,9 @@ export default class Layout extends React.Component<{}, IState> {
             this.getAuthorize()
     }
 
-    getUser = () => {
-        const userId = getUserId();
-        if (userId) {
-            this.setState({ userId });
-        }
-    }
-
     getAuthorize = async () => {
-        const { userId } = this.state;
-        if (typeof userId === 'number') {
+        const userId = getUserId();
+        if (userId !== null) {
             const isAuthorized = await bodyApi.isAuthorizedUser(userId);
             this.setState({ isAuthorized });
         } else {

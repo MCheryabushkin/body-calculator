@@ -16,6 +16,15 @@
     &:hover {
         box-shadow: 0px 2px 8px rgba(16, 16, 122, 0.16);
     }
+
+    &.disabledCard {
+        position: relative;
+        opacity: 0.4;
+
+        &:hover {
+            box-shadow: none;
+        }
+    }
 }
 
 .textContainer {
@@ -69,6 +78,22 @@
             }
         }
     }
+    
+    &.stepsIcon {
+        i {
+            background: url("../../Icons/steps.svg") center no-repeat;
+            background-size: cover;
+        }
+        
+        &.iconHovered {
+            background: #2B50ED;
+            
+            i {
+                background: url("../../Icons/steps-white.svg") center no-repeat;
+                background-size: cover;
+            }
+        }
+    }
 }
 
 .title {
@@ -100,4 +125,8 @@
     line-height: 20px;
     font-family: 'Open Sans Bold';
     cursor: pointer;
+
+    &.disabledBtn {
+        cursor: default;
+    }
 }
