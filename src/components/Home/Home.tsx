@@ -1,6 +1,4 @@
 import React from "react";
-import cn from 'classnames';
-import moment from 'moment';
 
 import * as S from "./Home.scss";
 import Modal from "../Modal/Modal";
@@ -133,7 +131,7 @@ export default class Home extends React.Component<{}, IState> {
         const label = `отчет ${this.today}`;
         // const weight = currentWeight;
         const weight = this.calculateMiddleWeight();
-        debugger;
+        
         bodyApi.sendWeeklyReport({fat, label, weight, userId: this.userId})
             .then(() => this.setState({ isWeightModal: false }))
     }
@@ -246,7 +244,6 @@ export default class Home extends React.Component<{}, IState> {
                         btnTitle="Изменить"
                         icon="steps"
                         onClickCardBtn={this.onCardClick}
-                        // disabled
                     />
                     <Card
                         cardType="report"
@@ -256,12 +253,12 @@ export default class Home extends React.Component<{}, IState> {
                         onClickCardBtn={this.onCardClick}
                         disabled
                     />
-
-                    {isWeightModal && <Modal content={this.renderModalContent()} onClose={this.onModalClose} />}
-                    {weightError && <Modal content={this.renderModalWeightError()} onClose={this.onModalClose} />}
                 </div>
 
                 <Journal />
+
+                {isWeightModal && <Modal content={this.renderModalContent()} onClose={this.onModalClose} />}
+                {weightError && <Modal content={this.renderModalWeightError()} onClose={this.onModalClose} />}
             </div>
         )
     }

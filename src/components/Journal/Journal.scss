@@ -10,9 +10,14 @@
     border-radius: 10px;
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
 
    &> div {
         margin-right: 82px;
+    }
+
+    &.fullReport {
+        background: #E0E8F6;
     }
 }
 
@@ -30,4 +35,47 @@
         margin-left: 4px;
         color: #5A5F6D;
     }
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.paginationBtn {
+    padding: 6px 8px;
+    font-size: 14px;
+    line-height: 20px;
+    background-color: #E0E8F6;
+    font-family: 'Open Sans Bold';
+    color: #5A5F6D;
+    cursor: pointer;
+
+    &.active {
+        color: #2B50ED;
+    }
+
+    &:hover {
+        color: #fff;
+        background-color: #2B50ED;
+    }
+}
+
+.pagArrowPrev,
+.pagArrowNext {
+    background: #E0E8F6 url("../../Icons/arrow.svg") center no-repeat;
+    background-size: cover;
+    width: 24px;
+    height: 32px;
+    cursor: pointer;
+
+    &:hover {
+        background: #2B50ED url("../../Icons/arrow-white.svg") center no-repeat;
+        background-size: cover;
+    }
+}
+
+.pagArrowNext {
+    transform: rotate(180deg);
 }
