@@ -7,10 +7,18 @@
 
 .logo {
     padding: 0 30px;
+
+    @media only screen and (max-width: 576px) {
+        padding: 0;
+    }
 }
 
 .nav {
     display: flex;
+
+    @media only screen and (max-width: 576px) {
+        display: none;
+    }
 }
 
 .logOut {

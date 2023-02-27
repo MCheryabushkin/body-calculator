@@ -3,4 +3,9 @@
     padding-left: 40px;
     padding-right: 40px;
     max-width: 1170px;
+
+    @media only screen and (max-width: 576px) {
+        padding-left: 24px;
+        padding-right: 24px;
+    }
 }
