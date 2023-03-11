@@ -5,7 +5,7 @@ import Modal from "../Modal/Modal";
 import Input from "../../UI/Input/Input";
 import Button from "../../UI/Button/Button";
 import bodyApi from "../../api/bodyApi";
-import { getDate, getFatPercentage, getTodayDate, getUserId } from "../../utils/util.helper";
+import { getDate, getFatPercentage, getMonthsDayCount, getTodayDate, getUserId } from "../../utils/util.helper";
 import Journal from "../Journal/Journal";
 import Card from "../Card/Card";
 
@@ -138,18 +138,29 @@ export default class Home extends React.Component<{}, IState> {
 
     calculateMiddleWeight = (): number => {
         const {weightHistory} = this.state;
-        // const lastWeigh = weightHistory[this.today];
-        const [day, month, year] = this.today.split("-");
+        const [day, month, year]: any[] = this.today.split("-");
         let summ = 0;
         let count = 0;
         for (let i = parseInt(day); i >= (parseInt(day) - 6); i--) {
-            const date = weightHistory[`${i}-${month}-${year}`];
+            const numOfMonth = (i <= 0) ? (month - 1 == 0 ? 12 : month - 1) : month;
+            const numOfYear = (numOfMonth <= 0) ? (year - 1) : year;
+            const daysCount = getMonthsDayCount(numOfMonth, numOfYear);
+            const dayOfMonth = (i <= 0) ? daysCount + i : i;
+
+            console.log(`${this.formatDate(dayOfMonth, numOfMonth)}-${numOfYear}`);
+            const date = weightHistory[`${this.formatDate(dayOfMonth, numOfMonth)}-${numOfYear}`];
             if (date) {
                 summ += date.weight;
                 count++;
             }
         }
         return (summ / count);
+    }
+
+    formatDate = (day: number | string, month: number | string) => {
+        const dayNew = (`${day}`.length === 1) ? "0" + day : day;
+        const monthNew = (`${month}`.length === 1) ? "0" + month : month;
+        return `${dayNew}-${monthNew}`;
     }
 
     onWeightChange = (value: any): any => {
@@ -251,7 +262,7 @@ export default class Home extends React.Component<{}, IState> {
                         btnTitle="Сдать"
                         icon="ruler"
                         onClickCardBtn={this.onCardClick}
-                        disabled
+                        // disabled
                     />
                 </div>
 
