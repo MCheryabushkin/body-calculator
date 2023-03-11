@@ -33,9 +33,17 @@ const getDate = (isCapitalize: boolean, value?: any) => {
 
 const capitalize = (str: string) => (str.charAt(0).toUpperCase() + str.slice(1));
 
+const getMonthsDayCount = (month: string, year: string) => {
+    const monthNum = parseInt(month);
+    const isLeapYear = parseInt(year) % 4 === 0;
+    if (monthNum === 2) return isLeapYear ? 29 : 28;
+    return ((monthNum % 2) && monthNum <= 7 || !(monthNum % 2) && monthNum > 7) ? 31 : 30;
+}
+
 export {
     getFatPercentage,
     getUserId,
     getTodayDate,
-    getDate
+    getDate,
+    getMonthsDayCount,
 };

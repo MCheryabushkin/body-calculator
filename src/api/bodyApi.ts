@@ -118,9 +118,9 @@ const bodyApi = {
         labels.push(newLabel);
         weight.push(newWeight);
 
-        // await firebaseApp.database().ref().update({[`/users/${userId}/bodyParameters/fat`]: fat});
-        // await firebaseApp.database().ref().update({[`/users/${userId}/bodyParameters/labels`]: labels});
-        // await firebaseApp.database().ref().update({[`/users/${userId}/bodyParameters/weight`]: weight});
+        await firebaseApp.database().ref().update({[`/users/${userId}/bodyParameters/fat`]: fat});
+        await firebaseApp.database().ref().update({[`/users/${userId}/bodyParameters/labels`]: labels});
+        await firebaseApp.database().ref().update({[`/users/${userId}/bodyParameters/weight`]: weight});
     }
 }
 
