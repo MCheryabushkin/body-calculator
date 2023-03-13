@@ -4,9 +4,11 @@ import Button from "../../UI/Button/Button";
 import Input from "../../UI/Input/Input";
 import {getFatPercentage} from "../../utils/util.helper";
 
+import * as S from "./Registration.scss"
 
 interface RegState {
     isHip: boolean;
+    isPasswordConfirm: boolean;
     user: any;
 }
 
@@ -31,6 +33,7 @@ class Registration extends React.Component<{}, RegState> {
 
         this.state = {
             isHip: false,
+            isPasswordConfirm: true,
             user: {
                 gender: '',
                 firstName: '',
@@ -73,6 +76,11 @@ class Registration extends React.Component<{}, RegState> {
         const user = Object.assign({}, stateUser);
         user[name] = value;
 
+        if (name === 'repeatPassword') {
+            const isPasswordConfirm = user[name] === user['password'];
+            this.setState({ isPasswordConfirm });
+        }
+
         if (name === 'gender') {
             const isHip = value === 'female' ? true : false;
             if (!isHip) delete user['hip'];
@@ -84,9 +92,13 @@ class Registration extends React.Component<{}, RegState> {
     }
 
     isRegBtnDisable = (): boolean => {
-        const { user } = this.state;
+        const { user, isPasswordConfirm } = this.state;
         let isDisabled = false;
+
+        if (!isPasswordConfirm) return true;
+        
         for (let key in user) {
+            if (key === 'lastName') continue;
             if (key === 'gender') {
                 if (user['gender'] === 'female' && !user['hip'])
                     isDisabled = true;
@@ -96,7 +108,7 @@ class Registration extends React.Component<{}, RegState> {
     }
 
     render() {
-        const { isHip } = this.state;
+        const { isHip, isPasswordConfirm } = this.state;
 
         return (
             <div>
@@ -106,7 +118,10 @@ class Registration extends React.Component<{}, RegState> {
                     <Input type="text" label="Фамилия" name="lastName" onChange={this.inputChange} />
                     <Input type="email" label="E-Mail" name="email" onChange={this.inputChange} required />
                     <Input type="password" label="Пароль" name="password" onChange={this.inputChange} required />
-                    <Input type="password" label="Повторите пароль" name="repeatPassword" onChange={this.inputChange} required />
+                    <div>
+                        <Input type="password" label="Повторите пароль" name="repeatPassword" onChange={this.inputChange} 
+                            required isError={!isPasswordConfirm} errorText="Пароли не совпадают" />
+                    </div>
                     <div>
                         <Input type="radio" label="муж." name="gender" value="male" onChange={this.inputChange} />
                         <Input type="radio" label="жен." name="gender" value="female" onChange={this.inputChange} />
@@ -115,7 +130,7 @@ class Registration extends React.Component<{}, RegState> {
                     <Input type="number" label="Рост" name="height" step="0.1" onChange={this.inputChange} required />
                     <Input type="number" label="Обхват шеи" name="neck" step="0.1" onChange={this.inputChange} required />
                     <Input type="number" label="Обхват талии" name="waist" step="0.1" onChange={this.inputChange} required />
-                    {isHip && <Input type="text" label="Обхват бедер" name="hip" step="0.1" onChange={this.inputChange} required />}
+                    {isHip && <Input type="number" label="Обхват бедер" name="hip" step="0.1" onChange={this.inputChange} required />}
                 </form>
                 <Button type="submit" text="Зарегистрироваться" disabled={this.isRegBtnDisable()} onClick={this.onRegistrationClick} />
             </div>
