@@ -1,4 +1,5 @@
 import React from "react";
+import cn from 'classnames';
 
 import * as S from "./Input.scss";
 
@@ -9,6 +10,8 @@ interface InputProps {
     name?: string;
     step?: string;
     required?: boolean;
+    isError?: boolean;
+    errorText?: string;
     onChange?: (value: any, name?: string) => void;
 }
 
@@ -36,10 +39,10 @@ export default class Input extends React.Component<InputProps, InputState> {
     }
 
     render() {
-        const { name, label, required } = this.props;
+        const { name, label, required, isError, errorText } = this.props;
         const { value } = this.state;
         return (
-            <div className={S.inputContainer}> 
+            <div className={cn(S.inputContainer, isError && S.error)}> 
                 <input {...this.props} 
                     className={S.input} 
                     placeholder={label} 
@@ -49,6 +52,7 @@ export default class Input extends React.Component<InputProps, InputState> {
                 />
                 <label htmlFor={name} className={S.placeholder}>{label}</label>
                 {required && <span className={S.requireStar}>*</span>}
+                {isError && <span className={S.errorText}>{errorText}</span>}
             </div>
         )
     }

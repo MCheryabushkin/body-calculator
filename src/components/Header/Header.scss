@@ -11,12 +11,17 @@
     @media only screen and (max-width: 576px) {
         padding: 0;
     }
+
+    a {
+        text-decoration: none;
+        color: #000;
+    }
 }
 
 .nav {
     display: flex;
 
-    @media only screen and (max-width: 576px) {
+    @media only screen and (max-width: 687px) {
         display: none;
     }
 }
@@ -31,5 +36,72 @@
         &:hover {
             color: #2B50ED;
         }
+    }
+
+    @media only screen and (max-width: 687px) {
+        display: none;
+    }
+}
+
+.sidebar {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.3);
+    z-index: 10;
+}
+
+.sidebarBody {
+    width: 80%;
+    height: 100%;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebarNav {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.listItem {
+    padding: 20px 0;
+}
+ 
+.link {
+    color: #5A5F6D;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 22px;
+    font-family: 'Open Sans Bold';
+
+    &:hover {
+        color: #576CED;
+    }
+}
+
+.burger {
+    display: none;
+    flex: 1;
+    text-align: right;
+    background: url("../../Icons/burger.svg") right center no-repeat;
+    width: 30px;
+    height: 30px;
+    background-size: 30px;
+
+    @media only screen and (max-width: 686px) {
+        display: block;
     }
 }

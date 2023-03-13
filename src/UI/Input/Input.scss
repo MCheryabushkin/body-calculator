@@ -7,6 +7,10 @@
   display: flex;
   position: relative;
   width: 280px;
+
+  &.error {
+    margin-bottom: 35px;
+  }
 }
 
 .input {
@@ -55,4 +59,12 @@
   right: 10px;
   top: 5px;
   color: #c10c0c;
+}
+
+.errorText {
+  color: red;
+  position: absolute;
+  bottom: -16px;
+  font-size: 11px;
+  left: 10px;
 }

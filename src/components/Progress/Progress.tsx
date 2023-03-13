@@ -54,7 +54,7 @@ export default class Progress extends React.Component<{}, IState> {
             },
             elements: {
                 point: {
-                    radius: 5
+                    radius: window.innerWidth > 500 ? 5 : 3
                 },
                 line: {
 
