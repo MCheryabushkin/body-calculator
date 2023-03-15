@@ -5,7 +5,7 @@ import Modal from "../Modal/Modal";
 import Input from "../../UI/Input/Input";
 import Button from "../../UI/Button/Button";
 import bodyApi from "../../api/bodyApi";
-import { getDate, getFatPercentage, getMonthsDayCount, getTodayDate, getUserId } from "../../utils/util.helper";
+import { formatDate, getDate, getFatPercentage, getMonthsDayCount, getTodayDate, getUserId, randomStringKey } from "../../utils/util.helper";
 import Journal from "../Journal/Journal";
 import Card from "../Card/Card";
 
@@ -18,6 +18,7 @@ interface IState {
     currentUser: any;
     weightError: boolean;
     weightHistory: any;
+    journalKey: string;
 }
 
 
@@ -38,6 +39,7 @@ export default class Home extends React.Component<{}, IState> {
             weightError: false,
             weightHistory: null,
             currentSteps: 0,
+            journalKey: randomStringKey(10),
         }
 
         this.weightInputRef = React.createRef();
@@ -91,9 +93,10 @@ export default class Home extends React.Component<{}, IState> {
     renderWeightForm = () => {
         const { currentWeight } = this.state;
         return (
-            <form action="submit" className={S.form}>
-                <Input type="number" ref={this.weightInputRef} value={currentWeight} label="Утренний вес" />
-                <Button text="Отправить" disabled={false} onClick={this.onClickWeightBtn} />
+            <form action="submit" className={S.form} onSubmit={this.onChangeWeightOrSteps}>
+                <Input type="date" name="date" label="Дата" value={formatDate(this.today)} />
+                <Input type="number" name="weight" value={currentWeight} label="Утренний вес" />
+                <Button type="submit" text="Отправить" disabled={false} />
             </form>
         )
     }
@@ -112,16 +115,15 @@ export default class Home extends React.Component<{}, IState> {
 
     renderStepsForm = () => {
         return (
-            <form action="submit" onSubmit={this.onClickStepsBtn} className={S.form}>
+            <form action="submit" onSubmit={this.onChangeWeightOrSteps} className={S.form}>
+                <Input type="date" name="date" label="Дата" value={formatDate(this.today)} />
                 <Input type="number" name="steps" label="Шаги за день" />
                 <Button text="Отправить" disabled={false} />
             </form>
         )
     }
 
-    renderModalWeightError = () => {
-        return <div>Заполните сегодняшний вес</div>
-    }
+    renderModalWeightError = () => <div>Заполните сегодняшний вес</div>
 
     sendWeeklyReport = (e: any) => {
         e.preventDefault();
@@ -129,7 +131,6 @@ export default class Home extends React.Component<{}, IState> {
         const { neck, waist, hip } = e.target;
         const fat = getFatPercentage({neck: neck.value, waist: waist.value, hip: hip?.value, gender, height});
         const label = `отчет ${this.today}`;
-        // const weight = currentWeight;
         const weight = this.calculateMiddleWeight();
         
         bodyApi.sendWeeklyReport({fat, label, weight, userId: this.userId})
@@ -167,28 +168,21 @@ export default class Home extends React.Component<{}, IState> {
         if (!parseFloat(value)) return;
         this.setState({ currentWeight: parseFloat(value) });
     }
-    onClickWeightBtn = (value: any): any => {
-        value.preventDefault();
 
-        const currentWeight = parseFloat(this.weightInputRef.current.state.value);
+    onChangeWeightOrSteps = (e: any) => {
+        e.preventDefault();
+        const { steps, weight, date } = e.target;
+        const value = steps?.value || weight?.value;
+        const name = steps?.name || weight?.name;
+        if (!value  || !date) return;
+
+        const convertedDate = getTodayDate(date.value);
+        const currentValue = parseFloat(value);
         const { currentUserWeightHistory } = this.state;
 
-        if (!currentUserWeightHistory[this.today])
-            currentUserWeightHistory[this.today] = {weight: 0};
-        currentUserWeightHistory[this.today].weight = currentWeight;
-        this.setState({ isWeightModal: false, currentUserWeightHistory });
-        bodyApi.updateBodyParameters(currentUserWeightHistory, this.userId);
-        this.getCurrentWeight();
-    }
-
-    onClickStepsBtn = (value: any): any => {
-        value.preventDefault();
-        const currentSteps = parseFloat(value.target.steps.value);
-        const { currentUserWeightHistory } = this.state;
-
-        if (!currentUserWeightHistory[this.today])
-            currentUserWeightHistory[this.today] = { steps: 0 };
-        currentUserWeightHistory[this.today].steps = currentSteps;
+        if (!currentUserWeightHistory[convertedDate])
+            currentUserWeightHistory[convertedDate] = { [name]: 0 };
+        currentUserWeightHistory[convertedDate][name] = currentValue;
         this.setState({ isWeightModal: false, currentUserWeightHistory });
         bodyApi.updateBodyParameters(currentUserWeightHistory, this.userId);
         this.getCurrentWeight();
@@ -205,8 +199,8 @@ export default class Home extends React.Component<{}, IState> {
         })
     }
 
-    canSetReport = async () => {
-        const {labels} = await bodyApi.getBodyParametersByUserId(this.userId);
+    canSetReport = () => {
+        
     }
 
     renderWeightError = () => {
@@ -222,15 +216,14 @@ export default class Home extends React.Component<{}, IState> {
 
     getCurrentWeight = async () => {
         const { weight: currentWeight, steps: currentSteps} = await bodyApi.getUserParams(this.today, this.userId);
-        this.setState({ currentWeight, currentSteps });
+        const journalKey = randomStringKey(10);
+        this.setState({ currentWeight, currentSteps, journalKey });
     }
 
-    renderCurrentParam = (currentParam: any, union?: string) => {
-        return <><span>{currentParam ? currentParam : '-'}</span> {union}</>
-    }
+    renderCurrentParam = (currentParam: any, union?: string) => <span><span>{currentParam ? currentParam : '-'}</span> {union}</span>
 
     render() {
-        const { isWeightModal, currentWeight, weightError, currentSteps } = this.state;
+        const { isWeightModal, currentWeight, weightError, currentSteps, journalKey } = this.state;
 
         return (
             <div key={`${currentWeight}-${currentSteps}`}>
@@ -266,7 +259,7 @@ export default class Home extends React.Component<{}, IState> {
                     />
                 </div>
 
-                <Journal />
+                <Journal key={journalKey} />
 
                 {isWeightModal && <Modal content={this.renderModalContent()} onClose={this.onModalClose} />}
                 {weightError && <Modal content={this.renderModalWeightError()} onClose={this.onModalClose} />}

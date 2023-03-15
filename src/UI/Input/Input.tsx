@@ -41,6 +41,7 @@ export default class Input extends React.Component<InputProps, InputState> {
     render() {
         const { name, label, required, isError, errorText } = this.props;
         const { value } = this.state;
+        
         return (
             <div className={cn(S.inputContainer, isError && S.error)}> 
                 <input {...this.props} 

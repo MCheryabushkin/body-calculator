@@ -11,9 +11,14 @@ const getUserId = () => {
     return null;
 };
 
-const getTodayDate = () => {
-    const date = new Date();
-    return moment(date).format("DD-MM-YYYY").split("T")[0];
+const getTodayDate = (date?: string) => {
+    const newDate = date ? new Date(date) : new Date();
+    return moment(newDate).format("DD-MM-YYYY").split("T")[0];
+}
+
+const formatDate = (date: string) => {
+    const [dd, mm, yyyy] = date.split('-');
+    return `${yyyy}-${mm}-${dd}`;
 }
 
 const getDate = (isCapitalize: boolean, value?: any) => {
@@ -40,10 +45,24 @@ const getMonthsDayCount = (month: string, year: string) => {
     return ((monthNum % 2) && monthNum <= 7 || !(monthNum % 2) && monthNum > 7) ? 31 : 30;
 }
 
+const randomStringKey = (length: number) => {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    let counter = 0;
+    while (counter < length) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      counter += 1;
+    }
+    return result;
+}
+
 export {
     getFatPercentage,
     getUserId,
     getTodayDate,
     getDate,
     getMonthsDayCount,
+    formatDate,
+    randomStringKey,
 };
