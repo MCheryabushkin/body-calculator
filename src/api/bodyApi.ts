@@ -67,6 +67,7 @@ const bodyApi = {
     async loginUser(login: string, password: string) {
         const users = await this.getUsers();
         const user = users.find((user: any) => user.email === login);
+
         if (!user)
             return 'User not found';
         
