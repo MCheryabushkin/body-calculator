@@ -35,11 +35,12 @@ class Login extends React.Component<{}, LoginState> {
         else this.setState({ isBtnDisabled: true })
     }
 
-    onLoginBtnClick = async () => {
-        const login = this.loginInputRef.current.state.value.toLowerCase();
+    onLoginBtnClick = async (e: any) => {
+        e.preventDefault();
+        const { login, password } = e.target;
         const user = await bodyApi.loginUser(
-            login, 
-            this.passwordInputRef.current.state.value);
+            login.value.toLowerCase(), 
+            password.value);
         if (typeof user !== 'string')
             bodyApi.setAuthorize(user.id, true)
                 .then(() => localStorage.setItem("userId", user.id))
@@ -51,13 +52,13 @@ class Login extends React.Component<{}, LoginState> {
         const { isBtnDisabled } = this.state;
 
         return (
-            <div className={S.loginContainer}>
-                <Input ref={this.loginInputRef} type="text" label="Логин" onChange={this.onInputChange} />
-                <Input ref={this.passwordInputRef} type="password" label="Пароль" onChange={this.onInputChange} />
-                <Button text="Войти" disabled={isBtnDisabled} onClick={this.onLoginBtnClick} />
+            <form className={S.loginContainer} onSubmit={this.onLoginBtnClick}>
+                <Input ref={this.loginInputRef} name="login" type="text" label="Логин" onChange={this.onInputChange} />
+                <Input ref={this.passwordInputRef} name="password" type="password" label="Пароль" onChange={this.onInputChange} />
+                <Button type="submit" text="Войти" disabled={false} />
     
                 <div className={S.registration}>Или <Link to="/registration">зарегистрироваться</Link></div>
-            </div>
+            </form>
         )
     }
 }
