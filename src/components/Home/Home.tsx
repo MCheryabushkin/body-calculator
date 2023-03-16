@@ -19,6 +19,7 @@ interface IState {
     weightError: boolean;
     weightHistory: any;
     journalKey: string;
+    bodyParameters: any;
 }
 
 
@@ -40,6 +41,7 @@ export default class Home extends React.Component<{}, IState> {
             weightHistory: null,
             currentSteps: 0,
             journalKey: randomStringKey(10),
+            bodyParameters: {},
         }
 
         this.weightInputRef = React.createRef();
@@ -55,6 +57,7 @@ export default class Home extends React.Component<{}, IState> {
         await this.setCurrentUserWeight();
         await this.getCurrentUser();
         await this.getWeightHistory();
+        await this.getBodyParameters();
     }
 
     setCurrentUserWeight = async () => {
@@ -70,6 +73,11 @@ export default class Home extends React.Component<{}, IState> {
     getWeightHistory = async () => {
         const weightHistory = await bodyApi.getWeightHistory(this.userId);
         this.setState({ weightHistory });
+    }
+
+    getBodyParameters = async () => {
+        const bodyParameters = await bodyApi.getBodyParametersByUserId(this.userId);
+        this.setState({ bodyParameters });
     }
 
     getDate = () => {
@@ -135,6 +143,8 @@ export default class Home extends React.Component<{}, IState> {
         
         bodyApi.sendWeeklyReport({fat, label, weight, userId: this.userId})
             .then(() => this.setState({ isWeightModal: false }))
+            .then(() => window.history.pushState({}, null, "/progress"))
+            .then(() => window.location.reload());
     }
 
     calculateMiddleWeight = (): number => {
@@ -142,6 +152,7 @@ export default class Home extends React.Component<{}, IState> {
         const [day, month, year]: any[] = this.today.split("-");
         let summ = 0;
         let count = 0;
+        
         for (let i = parseInt(day); i >= (parseInt(day) - 6); i--) {
             const numOfMonth = (i <= 0) ? (month - 1 == 0 ? 12 : month - 1) : month;
             const numOfYear = (numOfMonth <= 0) ? (year - 1) : year;
@@ -150,7 +161,7 @@ export default class Home extends React.Component<{}, IState> {
 
             console.log(`${this.formatDate(dayOfMonth, numOfMonth)}-${numOfYear}`);
             const date = weightHistory[`${this.formatDate(dayOfMonth, numOfMonth)}-${numOfYear}`];
-            if (date) {
+            if (date && date.weight) {
                 summ += date.weight;
                 count++;
             }
@@ -200,7 +211,13 @@ export default class Home extends React.Component<{}, IState> {
     }
 
     canSetReport = () => {
-        
+        const { dayOfWeek } = getDate();
+        const { bodyParameters: { labels } } = this.state;
+        const label = `отчет ${this.today}`;
+        if (labels && labels.find((el: string) => el === label))
+            return false;
+
+        return (dayOfWeek === 'суббота' || dayOfWeek === 'воскресенье' || dayOfWeek === 'понедельник') ? true : false;
     }
 
     renderWeightError = () => {
@@ -255,7 +272,7 @@ export default class Home extends React.Component<{}, IState> {
                         btnTitle="Сдать"
                         icon="ruler"
                         onClickCardBtn={this.onCardClick}
-                        // disabled
+                        disabled={!this.canSetReport()}
                     />
                 </div>
 

@@ -21,7 +21,7 @@ const formatDate = (date: string) => {
     return `${yyyy}-${mm}-${dd}`;
 }
 
-const getDate = (isCapitalize: boolean, value?: any) => {
+const getDate = (isCapitalize: boolean = false, value?: any) => {
     const date = value ? new Date(value) : new Date();
     const days = ["воскресенье", "понедельник", "вторник", "среда", "четверг", "пятница", "суббота"];
     const months = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"];
