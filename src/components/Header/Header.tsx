@@ -49,7 +49,7 @@ export default class Header extends React.Component<{}, IState> {
 
     renderLogo = () => {
         const pathname = window.location.pathname;
-        return pathname === '/' 
+        return pathname === '/body-calculator/' 
             ? 'YoniFat'
             : <NavLink to="/body-calculator/" onClick={this.onLinkClick}>YoniFat</NavLink>
     }
@@ -65,10 +65,10 @@ export default class Header extends React.Component<{}, IState> {
                         <h2>{this.renderLogo()}</h2>
                     </div>
                     <div className={S.nav} key={pathname}>
-                        <Link to="/" type="home" onClick={this.onLinkClick}>Главная</Link>
-                        <Link to="/calculator" type="home" onClick={this.onLinkClick}>Калькулятор</Link>
-                        <Link to="/progress" type="home" onClick={this.onLinkClick}>Мой прогресс</Link>
-                        <Link to="/help" type="home" onClick={this.onLinkClick}>Помощь</Link>
+                        <Link to="/body-calculator/" type="home" onClick={this.onLinkClick}>Главная</Link>
+                        <Link to="/body-calculator/calculator" type="home" onClick={this.onLinkClick}>Калькулятор</Link>
+                        <Link to="/body-calculator/progress" type="home" onClick={this.onLinkClick}>Мой прогресс</Link>
+                        <Link to="/body-calculator/help" type="home" onClick={this.onLinkClick}>Помощь</Link>
                     </div>
                     <div className={S.logOut}><span onClick={this.logOut}>Выйти</span></div>
                     <div className={S.burger} onClick={this.onClickBurger}></div>

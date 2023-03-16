@@ -149,7 +149,7 @@ export default class Home extends React.Component<{}, IState> {
             hip: hip?.value ? parseFloat(hip.value) : 0
         })
             .then(() => this.setState({ isWeightModal: false }))
-            .then(() => window.history.pushState({}, null, "/"))
+            .then(() => window.history.pushState({}, null, "/body-calculator/"))
             .then(() => window.location.reload());
     }
 
