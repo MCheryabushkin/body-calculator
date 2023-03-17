@@ -44,8 +44,9 @@ export default class Journal extends React.Component<{}, JournalState> {
     sortJournal = (a: string, b: string): number => {
         const [aDay, aMonth, aYear] = a.split('-');
         const [bDay, bMonth, bYear] = b.split('-');
-
-        return new Date(`${aMonth}-${aDay}-${aYear}`) < new Date(`${bMonth}-${bDay}-${bYear}`) ? -1 : 1;
+        let newDateA = new Date( parseInt(aYear), parseInt(aMonth) - 1, parseInt(aDay));
+        let newDateB = new Date( parseInt(bYear), parseInt(bMonth) - 1, parseInt(bDay));
+        return newDateA.getTime() < newDateB.getTime() ? -1 : 1;
     }
 
     renderPagination = () => {
