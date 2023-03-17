@@ -103,7 +103,7 @@ export default class Home extends React.Component<{}, IState> {
         return (
             <form action="submit" className={S.form} onSubmit={this.onChangeWeightOrSteps}>
                 <Input type="date" name="date" label="Дата" value={formatDate(this.today)} />
-                <Input type="number" name="weight" value={currentWeight} label="Утренний вес" />
+                <Input type="number" name="weight" step="0.01" value={currentWeight} label="Утренний вес" />
                 <Button type="submit" text="Отправить" disabled={false} />
             </form>
         )
@@ -113,8 +113,8 @@ export default class Home extends React.Component<{}, IState> {
         const { currentUser: { gender } } = this.state;
         return (
             <form action="submit" className={S.form} onSubmit={this.sendWeeklyReport}>
-                <Input type="number" name="neck" label="Обхват шеи" />
-                <Input type="number" name="waist" label="Обхват талии" />
+                <Input type="number" name="neck" step="0.01" label="Обхват шеи" />
+                <Input type="number" name="waist" step="0.01" label="Обхват талии" />
                 {gender === "female" && <Input type="number" name="hip" label="Обхват бёдер" />}
                 <Button type="submit" text="Отправить" disabled={false} />
             </form>
@@ -125,7 +125,7 @@ export default class Home extends React.Component<{}, IState> {
         return (
             <form action="submit" onSubmit={this.onChangeWeightOrSteps} className={S.form}>
                 <Input type="date" name="date" label="Дата" value={formatDate(this.today)} />
-                <Input type="number" name="steps" label="Шаги за день" />
+                <Input type="number" name="steps" step="0.01" label="Шаги за день" />
                 <Button text="Отправить" disabled={false} />
             </form>
         )
