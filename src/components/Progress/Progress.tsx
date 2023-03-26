@@ -1,4 +1,5 @@
 import React from "react";
+import { install } from 'resize-observer';
 import dataJSON from "../../assets/myParameters";
 import 'chart.js/auto';
 import { Line } from 'react-chartjs-2';
@@ -26,6 +27,8 @@ export default class Progress extends React.Component<{}, IState> {
 
     componentDidMount(): void {
         this.getData();
+
+        if (!window.ResizeObserver) install();
     }
 
     getData = async () => {
