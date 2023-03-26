@@ -29,6 +29,7 @@
     "react-router-dom": "^6.4.3",
     "react-scripts": "^4.0.3",
     "react-svg-loader": "^3.0.3",
+    "resize-observer": "^1.0.4",
     "webpack": "^5.38.1",
     "webpack-cli": "^4.7.0"
   },
