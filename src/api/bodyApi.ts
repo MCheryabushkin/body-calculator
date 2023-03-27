@@ -113,15 +113,28 @@ const bodyApi = {
         return bodyParameters[userId].weightHistory;
     },
 
-    async sendWeeklyReport({ fat: newFat, label: newLabel, weight: newWeight, userId}: { fat: number, label: string, weight: string | number, userId: number}) {
-        const {fat, labels, weight} = await this.getBodyParametersByUserId(userId);
+    async sendWeeklyReport({ fat: newFat, label: newLabel, weight: newWeight, userId, minWeight, neck, waist, hip }: 
+        { fat: number, label: string, weight: string | number, userId: number, minWeight: number, neck: number, waist: number, hip: number }) {
+        let {fat, labels, weight, reportData} = await this.getBodyParametersByUserId(userId);
         fat.push(newFat);
         labels.push(newLabel);
         weight.push(newWeight);
+        if (!reportData)
+            reportData = [];
+
+        reportData.push({
+            fat: newFat,
+            weight: newWeight,
+            minWeight,
+            reportNumber: reportData.length + 1,
+            date: newLabel.split(" ")[1],
+            neck, waist, hip
+        })
 
         await firebaseApp.database().ref().update({[`/users/${userId}/bodyParameters/fat`]: fat});
         await firebaseApp.database().ref().update({[`/users/${userId}/bodyParameters/labels`]: labels});
         await firebaseApp.database().ref().update({[`/users/${userId}/bodyParameters/weight`]: weight});
+        await firebaseApp.database().ref().update({[`/users/${userId}/bodyParameters/reportData`]: reportData});
     }
 }
 
