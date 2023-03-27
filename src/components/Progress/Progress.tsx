@@ -1,6 +1,5 @@
 import React from "react";
 import { install } from 'resize-observer';
-import dataJSON from "../../assets/myParameters";
 import 'chart.js/auto';
 import { Line } from 'react-chartjs-2';
 import bodyApi from "../../api/bodyApi";
@@ -27,7 +26,6 @@ export default class Progress extends React.Component<{}, IState> {
 
     componentDidMount(): void {
         this.getData();
-
         if (!window.ResizeObserver) install();
     }
 
@@ -35,6 +33,47 @@ export default class Progress extends React.Component<{}, IState> {
         const userId = getUserId();
         const user: User = await bodyApi.getUserById(userId);
         this.setState({ user, isLoading: true });
+    }
+
+    renderWeeklyBar = () => {
+        const { user } = this.state;
+        const { bodyParameters: { reportData }, gender } = user;
+
+        if (!reportData) return [];
+        return reportData.reverse().map(({ minWeight, reportNumber, date, neck, waist, hip, fat, weight }) => (
+            <div key={date} className={S.reportLine}>
+                <div className={S.darkBlock}>
+                    <span className={S.reportNumber}>Отчёт {reportNumber}</span>
+                    <span className={S.reportDate}>{date.split("-").join(".")}</span>
+                </div>
+                <div className={S.lightBlock}>
+                    <div className={S.paramItem}>
+                        <span className={S.paramTitle}>% жира</span>
+                        <span>{fat}</span>
+                    </div>
+                    <div className={S.paramItem}>
+                        <span className={S.paramTitle}>средний вес</span>
+                        <span className={S.paramValue}>{weight}<span>кг</span></span>
+                    </div>
+                    <div className={S.paramItem}>
+                        <span className={S.paramTitle}>мин. вес</span>
+                        <span className={S.paramValue}>{minWeight}<span>кг</span></span>
+                    </div>
+                    <div className={S.paramItem}>
+                        <span className={S.paramTitle}>обхват шеи</span>
+                        <span className={S.paramValue}>{neck}<span>см</span></span>
+                    </div>
+                    <div className={S.paramItem}>
+                        <span className={S.paramTitle}>обхват талии</span>
+                        <span className={S.paramValue}>{waist}<span>см</span></span>
+                    </div>
+                    { gender === 'female' && <div className={S.paramItem}>
+                        <span className={S.paramTitle}>обхват бёдер</span>
+                        <span className={S.paramValue}>{hip}<span>см</span></span>
+                    </div>}
+                </div>
+            </div>
+        ))
     }
     
     render() {
@@ -52,16 +91,12 @@ export default class Progress extends React.Component<{}, IState> {
               },
               title: {
                 display: false,
-                text: "% жира",
               },
             },
             elements: {
                 point: {
                     radius: window.innerWidth > 500 ? 5 : 3
                 },
-                line: {
-
-                }
             },
             scales: {
                 x: {
@@ -105,20 +140,27 @@ export default class Progress extends React.Component<{}, IState> {
             ],
         };
         return (
-            <div className={S.chartBlock}>
-                <div className={S.chartContainer}>
-                    <div className={S.chartHeader}>% жира</div>
-                    <div>
-                        <Line options={options} data={dataFat} />
+            <>
+                <div className={S.chartBlock}>
+                    <div className={S.chartContainer}>
+                        <div className={S.chartHeader}>% жира</div>
+                        <div>
+                            <Line options={options} data={dataFat} />
+                        </div>
+                    </div>
+                    <div className={S.chartContainer}>
+                        <div className={S.chartHeader}>Средний вес</div>
+                        <div>
+                            <Line options={options} data={dataWeight} />
+                        </div>
                     </div>
                 </div>
-                <div className={S.chartContainer}>
-                    <div className={S.chartHeader}>Средний вес</div>
-                    <div>
-                        <Line options={options} data={dataWeight} />
-                    </div>
+
+                <h2 className={S.weeklyHistoryTitle}>Еженедельные отчёты</h2>
+                <div className={S.weeklyHistory}>
+                    {this.renderWeeklyBar()}
                 </div>
-            </div>
+            </>
         )
     }
 }
