@@ -53,11 +53,11 @@ export default class Progress extends React.Component<{}, IState> {
                     </div>
                     <div className={S.paramItem}>
                         <span className={S.paramTitle}>средний вес</span>
-                        <span className={S.paramValue}>{weight}<span>кг</span></span>
+                        <span className={S.paramValue}>{weight.toFixed(2)}<span>кг</span></span>
                     </div>
                     <div className={S.paramItem}>
                         <span className={S.paramTitle}>мин. вес</span>
-                        <span className={S.paramValue}>{minWeight}<span>кг</span></span>
+                        <span className={S.paramValue}>{minWeight.toFixed(2)}<span>кг</span></span>
                     </div>
                     <div className={S.paramItem}>
                         <span className={S.paramTitle}>обхват шеи</span>
