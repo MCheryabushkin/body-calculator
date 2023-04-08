@@ -205,6 +205,7 @@ export default class Home extends React.Component<{}, IState> {
         this.setState({ isWeightModal: false, currentUserWeightHistory });
         bodyApi.updateBodyParameters(currentUserWeightHistory, this.userId);
         this.getCurrentWeight();
+        this.getWeightHistory();
     }
 
     onCardClick = (modalType: any) => {
