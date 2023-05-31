@@ -5,6 +5,7 @@ import Home from '../Home/Home';
 import Login from "../Login/Login";
 import Progress from '../Progress/Progress';
 import Registration from "../Registration/Registration";
+import Help from "../Help/Help";
 
 interface RouteProps {
     isAuthorized: boolean;
@@ -19,6 +20,7 @@ function Routes({isAuthorized}: RouteProps) {
             <Route path='/login' element={isAuthorized ? <Home /> : <Login />} />
             <Route path='/calculator' element={isAuthorized ? <Calculator /> : <Login />} />
             <Route path='/progress' element={isAuthorized ? <Progress /> : <Login />} />
+            <Route path='/help' element={isAuthorized ? <Help /> : <Login />} />
         </Router>
     )
 }

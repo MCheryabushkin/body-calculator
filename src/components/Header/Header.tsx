@@ -68,6 +68,7 @@ export default class Header extends React.Component<{}, IState> {
                         <Link to="/" type="home" onClick={this.onLinkClick}>Главная</Link>
                         <Link to="/calculator" type="home" onClick={this.onLinkClick}>Калькулятор</Link>
                         <Link to="/progress" type="home" onClick={this.onLinkClick}>Мой прогресс</Link>
+                        <Link to="/help" type="home" onClick={this.onLinkClick}>Помощь</Link>
                     </div>
                     <div className={S.logOut}><span onClick={this.logOut}>Выйти</span></div>
                     <div className={S.burger} onClick={this.onClickBurger}></div>
@@ -76,8 +77,9 @@ export default class Header extends React.Component<{}, IState> {
                     <div className={S.sidebarBody}>
                         <ul className={S.sidebarNav}>
                             <li className={S.listItem}><NavLink className={S.link} to="/" onClick={this.onLinkClick}>Главная</NavLink></li>
-                            <li className={S.listItem}><NavLink className={S.link} to="/calculator" onClick={this.onLinkClick}>Калькулятор</NavLink></li>
                             <li className={S.listItem}><NavLink className={S.link} to="/progress" onClick={this.onLinkClick}>Мой прогресс</NavLink></li>
+                            <li className={S.listItem}><NavLink className={S.link} to="/help" onClick={this.onLinkClick}>Помощь</NavLink></li>
+                            <li className={S.listItem}><div><span onClick={this.logOut}>Выйти</span></div></li>
                         </ul>
                     </div>
                 </div>}

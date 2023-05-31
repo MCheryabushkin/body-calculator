@@ -7,8 +7,7 @@ import { User } from "../../interfaces";
 
 import * as S from "./Progress.scss";
 import { getUserId } from "../../utils/util.helper";
-
-
+import Icon from "../../Icon/Icon";
 interface IState {
     user: User;
     isLoading: boolean;
@@ -50,6 +49,7 @@ export default class Progress extends React.Component<{}, IState> {
                     <div className={S.paramItem}>
                         <span className={S.paramTitle}>% жира</span>
                         <span>{fat}</span>
+                        {/* <Icon type="arrow-up" className={S.icon}></Icon> */}
                     </div>
                     <div className={S.paramItem}>
                         <span className={S.paramTitle}>средний вес</span>

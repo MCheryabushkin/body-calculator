@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from 'react-router-dom';
 import cn from 'classnames';
-import CUSTOM_ICONS from "../../Icons/index";
+import CUSTOM_ICONS from "../../Icon/Icons/index";
 
 import * as S from "./Link.scss";
 

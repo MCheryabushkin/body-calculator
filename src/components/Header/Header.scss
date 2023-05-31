@@ -21,7 +21,7 @@
 .nav {
     display: flex;
 
-    @media only screen and (max-width: 687px) {
+    @media only screen and (max-width: 801px) {
         display: none;
     }
 }
@@ -38,7 +38,7 @@
         }
     }
 
-    @media only screen and (max-width: 687px) {
+    @media only screen and (max-width: 801px) {
         display: none;
     }
 }
@@ -96,12 +96,12 @@
     display: none;
     flex: 1;
     text-align: right;
-    background: url("../../Icons/burger.svg") right center no-repeat;
+    background: url("../../Icon/icons/burger.svg") right center no-repeat;
     width: 30px;
     height: 30px;
     background-size: 30px;
 
-    @media only screen and (max-width: 686px) {
+    @media only screen and (max-width: 800px) {
         display: block;
     }
 }

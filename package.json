@@ -13,6 +13,7 @@
   "author": "",
   "dependencies": {
     "@babel/preset-react": "^7.13.13",
+    "@fortawesome/fontawesome-svg-core": "^6.4.0",
     "@hot-loader/react-dom": "^17.0.1",
     "@types/chart.js": "^2.9.37",
     "chart.js": "^3.9.1",
@@ -30,6 +31,7 @@
     "react-scripts": "^4.0.3",
     "react-svg-loader": "^3.0.3",
     "resize-observer": "^1.0.4",
+    "svg-react-loader": "^0.4.6",
     "webpack": "^5.38.1",
     "webpack-cli": "^4.7.0"
   },

@@ -46,37 +46,37 @@ module.exports = {
                 },
             },
             {
-                test: /\.(?:ico|gif|png|jpg|jpeg|svg)$/i,
+                test: /\.(?:ico|gif|png|jpg|jpeg)$/i,
                 type: 'asset/resource'
             },
             {
                 test: /\.(woff(2)?|eot|ttf|otf|)$/,
                 type: 'asset/inline',
             },
-            // {
-            //     test: /\.svg$/,
-            //     exclude: '/node_modules',
-            //     oneOf: [
-            //         {
-            //           issuer: /\.tsx?$/,
-            //           use: [
-            //             {
-            //               loader: 'babel-loader',
-            //             },
-            //             {
-            //               loader: 'svg-react-loader',
-            //             },
-            //           ],
-            //         },
-            //         {
-            //           loader: 'file-loader',
-            //           options: {
-            //             name: 'static/[name].[ext]',
-            //             outputPath: 'images/',
-            //           },
-            //         },
-            //       ],
-            // },
+            {
+                test: /\.svg$/,
+                exclude: '/node_modules',
+                oneOf: [
+                  {
+                    issuer: /\.(j|t)sx?$/,
+                    use: [
+                      {
+                        loader: 'babel-loader',
+                      },
+                      {
+                        loader: 'svg-react-loader',
+                      },
+                    ],
+                  },
+                  {
+                    loader: 'file-loader',
+                    options: {
+                      name: 'static/[name].[ext]',
+                      outputPath: 'images/',
+                    },
+                  },
+                ],
+              },
             {
                 test: /\.(css)$/,
                 use: [

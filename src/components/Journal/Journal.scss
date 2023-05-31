@@ -64,14 +64,14 @@
 
 .pagArrowPrev,
 .pagArrowNext {
-    background: #E0E8F6 url("../../Icons/arrow.svg") center no-repeat;
+    background: #E0E8F6 url("../../Icon/icons/arrow.svg") center no-repeat;
     background-size: cover;
     width: 24px;
     height: 32px;
     cursor: pointer;
 
     &:hover {
-        background: #2B50ED url("../../Icons/arrow-white.svg") center no-repeat;
+        background: #2B50ED url("../../Icon/icons/arrow-white.svg") center no-repeat;
         background-size: cover;
     }
 }
