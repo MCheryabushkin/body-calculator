@@ -20,7 +20,7 @@ function Routes({isAuthorized}: RouteProps) {
             <Route path='/body-calculator/login' element={isAuthorized ? <Home /> : <Login />} />
             <Route path='/body-calculator/calculator' element={isAuthorized ? <Calculator /> : <Login />} />
             <Route path='/body-calculator/progress' element={isAuthorized ? <Progress /> : <Login />} />
-            <Route path='/body-calculator//help' element={isAuthorized ? <Help /> : <Login />} />
+            <Route path='/body-calculator/help' element={isAuthorized ? <Help /> : <Login />} />
         </Router>
     )
 }
